@@ -9,6 +9,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(GameScreen), findsOneWidget);
-    expect(find.text('Score: 0'), findsOneWidget);
+    expect(find.text('1UP SCORE'), findsOneWidget);
+    expect(find.text('000000'), findsOneWidget);
   });
 }

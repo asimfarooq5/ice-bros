@@ -68,24 +68,48 @@ class _Hud extends StatelessWidget {
 
   const _Hud({required this.controller});
 
-  static const _style = TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold);
+  static const _label = TextStyle(
+    color: Color(0xFF7FE0FF),
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'monospace',
+    letterSpacing: 1,
+  );
+
+  static const _value = TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'monospace',
+    letterSpacing: 1,
+  );
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
-      builder: (context, _) => Padding(
-        padding: const EdgeInsets.all(12),
+      builder: (context, _) => Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF120C24),
+          border: Border(bottom: BorderSide(color: Color(0xFF1B1530), width: 3)),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Score: ${controller.score}', style: _style),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('1UP SCORE', style: _label),
+                Text(controller.score.toString().padLeft(6, '0'), style: _value),
+              ],
+            ),
             Row(
               children: List.generate(
                 controller.player.lives,
                 (_) => const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2),
-                  child: Icon(Icons.favorite, color: Colors.redAccent, size: 20),
+                  child: _PixelHeart(),
                 ),
               ),
             ),
@@ -94,6 +118,46 @@ class _Hud extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A small blocky heart icon, styled to match the pixel-art HUD.
+class _PixelHeart extends StatelessWidget {
+  const _PixelHeart();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 18,
+      height: 16,
+      child: CustomPaint(painter: _PixelHeartPainter()),
+    );
+  }
+}
+
+class _PixelHeartPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final cell = size.width / 6;
+    final paint = Paint()..color = const Color(0xFFE0473B)..isAntiAlias = false;
+    const grid = [
+      '.##.##.',
+      '#######',
+      '#######',
+      '.#####.',
+      '..###..',
+      '...#...',
+    ];
+    for (var y = 0; y < grid.length; y++) {
+      for (var x = 0; x < grid[y].length; x++) {
+        if (grid[y][x] == '#') {
+          canvas.drawRect(Rect.fromLTWH(x * cell, y * cell, cell, cell), paint);
+        }
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _Controls extends StatelessWidget {
@@ -155,11 +219,11 @@ class _ControlButton extends StatelessWidget {
         width: 56,
         height: 56,
         decoration: BoxDecoration(
-          color: Colors.white24,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: Colors.white54, width: 2),
+          color: const Color(0xFF1B1530),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFF7FE0FF), width: 2),
         ),
-        child: Icon(icon, color: Colors.white, size: 28),
+        child: Icon(icon, color: Colors.white, size: 26),
       ),
     );
   }
@@ -183,18 +247,59 @@ class _GameOverOverlay extends StatelessWidget {
           child: Container(
             color: Colors.black54,
             alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  won ? 'Stage Clear!' : 'Game Over',
-                  style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                Text('Score: ${controller.score}', style: const TextStyle(color: Colors.white, fontSize: 20)),
-                const SizedBox(height: 16),
-                ElevatedButton(onPressed: controller.restart, child: const Text('Play Again')),
-              ],
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 22),
+              decoration: BoxDecoration(
+                color: const Color(0xFF120C24),
+                border: Border.all(color: const Color(0xFF7FE0FF), width: 3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    won ? 'STAGE CLEAR!' : 'GAME OVER',
+                    style: const TextStyle(
+                      color: Color(0xFFE0473B),
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'monospace',
+                      letterSpacing: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'SCORE  ${controller.score.toString().padLeft(6, '0')}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontFamily: 'monospace',
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  GestureDetector(
+                    onTap: controller.restart,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2D6FE0),
+                        border: Border.all(color: Colors.white, width: 2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'PLAY AGAIN',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'monospace',
+                          letterSpacing: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

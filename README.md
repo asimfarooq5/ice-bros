@@ -19,7 +19,9 @@ clear the stage.
 - `lib/main.dart` — app entry point
 - `lib/game/models.dart` — game data (player, enemies, projectiles, platforms)
 - `lib/game/game_controller.dart` — gameplay loop, physics and collision rules
-- `lib/game/game_painter.dart` — renders the world with `CustomPainter`
+- `lib/game/game_painter.dart` — renders the world with `CustomPainter`,
+  drawing every sprite (hero, imps, snowballs, icy brick platforms) as
+  hand-built blocky pixel-art shapes for a retro 16-bit look
 - `lib/game/game_screen.dart` — screen scaffolding, HUD and on-screen controls
 
 ## Getting started

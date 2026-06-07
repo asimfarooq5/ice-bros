@@ -45,6 +45,9 @@ class GameController extends ChangeNotifier {
   int score = 0;
   GameStatus status = GameStatus.playing;
 
+  /// Total time the world has been running, used to drive sprite animations.
+  double elapsed = 0;
+
   bool _moveLeft = false;
   bool _moveRight = false;
   bool _jumpRequested = false;
@@ -63,6 +66,7 @@ class GameController extends ChangeNotifier {
     projectiles = [];
     score = 0;
     status = GameStatus.playing;
+    elapsed = 0;
   }
 
   void restart() {
@@ -90,6 +94,7 @@ class GameController extends ChangeNotifier {
   void update(double dt) {
     if (status != GameStatus.playing) return;
 
+    elapsed += dt;
     _updatePlayer(dt);
     _updateEnemies(dt);
     _updateProjectiles(dt);
