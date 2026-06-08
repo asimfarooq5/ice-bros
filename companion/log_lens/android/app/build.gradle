@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.asimfarooq.log_lens"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
